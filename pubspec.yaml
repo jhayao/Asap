@@ -1,0 +1,43 @@
+name: animated_background
+description: A new Flutter project.
+version: 1.0.0+1
+environment:
+  sdk: ">=2.8.0 <3.0.0"
+dependencies:
+  http: 0.12.2
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^0.1.2
+  shared_preferences: 0.5.12+2
+  animated_splash_screen: ^1.0.1+2
+  lottie: ^0.7.0+1
+  splashscreen: ^1.2.0
+  stacked: ^1.7.6
+  rflutter_alert:
+    git: git://github.com/RatelHub/rflutter_alert.git
+  flutter_launcher_icons: ^0.8.1
+  font_awesome_flutter: ^8.5.0
+  toast: ^0.1.5
+  flutter_secure_storage: ^3.3.5
+  flutter_spinkit: "^4.1.2"
+  progress_dialog: ^1.2.4
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+flutter:
+  uses-material-design: true
+  assets:
+  - lib/resources/images/background.png
+  - lib/resources/images/logo.png
+  - lib/resources/images/icon-back.png
+  - lib/resources/images/
+  - lib/resources/lottie/
+  - assets/fitness_app/
+  - assets/images/
+module:
+  androidX: true
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "lib/resources/images/ssc2.png"
