@@ -23,9 +23,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-
+  Future delays;
   @override
   void initState() {
+   delays =delayed();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController,
@@ -161,11 +162,14 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     await Future<dynamic>.delayed(const Duration(milliseconds: 50));
     return true;
   }
+ delayed() async {
+    return Future.delayed(const Duration(seconds: 3));
+  }
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: Future.delayed(const Duration(seconds: 3)),
+        future: delays,
         builder: (context,snapshot){
           switch(snapshot.connectionState)
           {
