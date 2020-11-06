@@ -1,4 +1,4 @@
-import 'package:animated_background/fitness_app/fitness_app_home_screen.dart';
+import 'package:animated_background/fitness_app/asap_app_home_screen.dart';
 import 'package:animated_background/homePage/app_theme.dart';
 import 'package:animated_background/homePage/custom_drawer/drawer_user_controller.dart';
 import 'package:animated_background/homePage/custom_drawer/home_drawer.dart';
@@ -21,7 +21,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
   @override
   void initState() {
     drawerIndex = DrawerIndex.HOME;
-    screenView =  FitnessAppHomeScreen();
+    screenView =  AsapAppHomeScreen();
     SpinKitRotatingCircle(
       color: Colors.white,
       size: 50.0,
@@ -58,7 +58,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
       drawerIndex = drawerIndexdata;
       if (drawerIndex == DrawerIndex.HOME) {
         setState(() {
-          screenView =  FitnessAppHomeScreen();
+          screenView =  AsapAppHomeScreen();
         });
       } else if (drawerIndex == DrawerIndex.Help) {
         setState(() {

@@ -1,6 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
-import 'package:animated_background/fitness_app/fitness_app_home_screen.dart';
+import 'package:animated_background/fitness_app/asap_app_home_screen.dart';
 import 'package:animated_background/homePage/navigation_home_screen.dart';
 import 'package:animated_background/src/api/api.dart';
 import 'package:animated_background/src/custom_button.dart';
@@ -258,7 +259,32 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
       ),
     );
   }
+  showAlertDialogs(BuildContext context) {
+    // Create button
+    Widget okButton = FlatButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
 
+    // Create AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Auth Error"),
+      content: Text("Wrong Username or Password."),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   showAlertDialog(BuildContext context){
     AlertDialog alert=AlertDialog(
@@ -292,57 +318,43 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     };
     showAlertDialog(context);
     var res,body;
-    res = await CallApi().postData(data, 'login');
+
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-
     try{
-      Future.delayed(const Duration(seconds: 3),(){
+        res = await CallApi().postData(data, 'login');
         body = json.decode(res.body);
+        print(body);
+        Navigator.of(context).pop();
         if(body['success']){
-
           localStorage.setString('token', body['token']);
           localStorage.setString('user', json.encode(body['user']));
-
           var userJson = localStorage.getString('user');
           var user = json.decode(userJson);
-
           print(user);
-
           Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (context, anim1, anim2) => NavigationHomeScreen()),
           );
         }
         else
         {
-          Alert(
-            context: context,
-            type: AlertType.error,
-            title: "Authentication Error",
-            desc: "Invalid Username or Password",
-            buttons: [
-              DialogButton(
-                child: Text(
-                  "Try Again",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
-                ),
-                onPressed: () => Navigator.pop(context),
-                color: Color.fromRGBO(0, 179, 134, 1.0),
-              ),
+          showAlertDialogs(context);
 
-            ],
-          ).show();
         }
-      });
 
     }on NoSuchMethodError catch(e) {
       Toast.show("Please Contact System Administrator", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+      Navigator.pop(context);
+    }on TimeoutException catch(e){
+      Toast.show("Connection Timeout", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+      Navigator.pop(context);
     }catch(e){
       Toast.show("No Internet Connection", context, duration: Toast.LENGTH_LONG, gravity:  Toast.BOTTOM);
+      Navigator.pop(context);
     }
     finally{
-      print(body);
       setState(() {
         _isLoading = false;
       });
+
     }
 
 
@@ -410,4 +422,6 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     // });
     // // print(body);
   }
+
 }
+

@@ -55,7 +55,7 @@ class _AnimatedBackgoundState extends State<AnimatedBackground>
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Animated Background',
+      title: 'ASAP System',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

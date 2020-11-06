@@ -16,7 +16,7 @@ class CallApi{
             ).timeout(
               Duration(seconds: 3),
               onTimeout: (){
-                return null;
+                return throw TimeoutException("Error");
               },
             );
 

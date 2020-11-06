@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:animated_background/homePage/app_theme.dart';
 import 'package:animated_background/src/onboarding_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

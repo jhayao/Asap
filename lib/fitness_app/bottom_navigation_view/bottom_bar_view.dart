@@ -2,6 +2,7 @@ import 'dart:math' as math;
 // import 'package:best_flutter_ui_templates/fitness_app/fintness_app_theme.dart';
 import 'package:animated_background/fitness_app/fintness_app_theme.dart';
 import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
+import 'package:animated_background/fitness_app/ui_view/title_view.dart';
 import 'package:animated_background/main.dart';
 import 'package:flutter/material.dart';
 
@@ -36,6 +37,7 @@ class _BottomBarViewState extends State<BottomBarView>
 
   @override
   Widget build(BuildContext context) {
+    TitleView();
     return Stack(
       alignment: AlignmentDirectional.bottomCenter,
       children: <Widget>[

@@ -1,32 +1,82 @@
+import 'dart:developer';
+
+import 'package:animated_background/fitness_app/traning/event_screen.dart';
 import 'package:animated_background/fitness_app/ui_view/body_measurement.dart';
 import 'package:animated_background/fitness_app/ui_view/glass_view.dart';
-import 'package:animated_background/fitness_app/ui_view/mediterranesn_diet_view.dart';
+import 'package:animated_background/fitness_app/ui_view/attendance_view.dart';
 import 'package:animated_background/fitness_app/ui_view/title_view.dart';
 import 'package:animated_background/fitness_app/fintness_app_theme.dart';
 import 'package:animated_background/fitness_app/Dashboard/event_list_view.dart';
-import 'package:animated_background/fitness_app/Dashboard/water_view.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class MyDiaryScreen extends StatefulWidget {
-  const MyDiaryScreen({Key key, this.animationController}) : super(key: key);
+import '../asap_app_home_screen.dart';
 
+
+class MyDashboardScreen extends StatefulWidget {
+  const MyDashboardScreen({Key key, this.animationController,this.changeBody}) : super(key: key);
   final AnimationController animationController;
+  final Function(int) changeBody;
   @override
-  _MyDiaryScreenState createState() => _MyDiaryScreenState();
+  _MyDashboardScreenState createState() => _MyDashboardScreenState();
 }
 
-class _MyDiaryScreenState extends State<MyDiaryScreen>
+class _MyDashboardScreenState extends State<MyDashboardScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
+  static String dateNow;
+  DateTime now;
 
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
   Future delays;
+    getDate() async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    setState(() {
+      dateNow = localStorage.getString('dateNow');
+    });
+  }
+  setDate(String dates) async{
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    setState(() {
+      localStorage.setString('dateNow', dates.toString());
+    });
+  }
+
+  void dateChange(int x) {
+      DateTime newDate = DateTime.parse(dateNow);
+      newDate = DateTime(newDate.year,newDate.month,newDate.day + x);
+      String stringDate = new DateFormat('yyyy-MM-dd').format(newDate);
+      now = newDate;
+      setState(() {
+        changeDate(stringDate);
+      });
+
+  }
+  void click(int x){
+      widget.changeBody(x);
+  }
+  void changeDate(String date) {
+
+    setState(() {
+      dateNow = date;
+    });
+    listViews.clear();
+    addAllListData();
+  }
+
+
   @override
   void initState() {
-   delays =delayed();
+
+    now = DateTime.now();
+    setDate(new DateFormat('yyyy-MM-dd').format(now));
+    getDate();
+    delays =delayed();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController,
@@ -65,6 +115,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       TitleView(
         titleTxt: 'Attendance Summary',
         subTxt: 'Details',
+        newIndex: 1,
+        callBacks: this.click,
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
@@ -73,7 +125,8 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       ),
     );
     listViews.add(
-      MediterranesnDietView(
+      AttendanceView(
+        dateNow: dateNow!=null ? dateNow : DateFormat('yyyy-MM-dd').format(DateTime.now()),
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
@@ -84,12 +137,15 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     listViews.add(
       TitleView(
         titleTxt: 'Events',
+        newIndex: 2,
+        callBacks: this.click,
         subTxt: 'Show All',
         animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
             parent: widget.animationController,
             curve:
                 Interval((1 / count) * 2, 1.0, curve: Curves.fastOutSlowIn))),
         animationController: widget.animationController,
+
       ),
     );
 
@@ -104,58 +160,58 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
       ),
     );
 
-    listViews.add(
-      TitleView(
-        titleTxt: 'Body measurement',
-        subTxt: 'Today',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-                Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-
-    listViews.add(
-      BodyMeasurementView(
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-                Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-    listViews.add(
-      TitleView(
-        titleTxt: 'Water',
-        subTxt: 'Aqua SmartBottle',
-        animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
-            parent: widget.animationController,
-            curve:
-                Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
-        animationController: widget.animationController,
-      ),
-    );
-
-    listViews.add(
-      WaterView(
-        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-            CurvedAnimation(
-                parent: widget.animationController,
-                curve: Interval((1 / count) * 7, 1.0,
-                    curve: Curves.fastOutSlowIn))),
-        mainScreenAnimationController: widget.animationController,
-      ),
-    );
-    listViews.add(
-      GlassView(
-          animation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController,
-                  curve: Interval((1 / count) * 8, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-          animationController: widget.animationController),
-    );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Body measurement',
+    //     subTxt: 'Today',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController,
+    //         curve:
+    //             Interval((1 / count) * 4, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController,
+    //   ),
+    // );
+    //
+    // listViews.add(
+    //   BodyMeasurementView(
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController,
+    //         curve:
+    //             Interval((1 / count) * 5, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController,
+    //   ),
+    // );
+    // listViews.add(
+    //   TitleView(
+    //     titleTxt: 'Water',
+    //     subTxt: 'Aqua SmartBottle',
+    //     animation: Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+    //         parent: widget.animationController,
+    //         curve:
+    //             Interval((1 / count) * 6, 1.0, curve: Curves.fastOutSlowIn))),
+    //     animationController: widget.animationController,
+    //   ),
+    // );
+    //
+    // listViews.add(
+    //   WaterView(
+    //     mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
+    //         CurvedAnimation(
+    //             parent: widget.animationController,
+    //             curve: Interval((1 / count) * 7, 1.0,
+    //                 curve: Curves.fastOutSlowIn))),
+    //     mainScreenAnimationController: widget.animationController,
+    //   ),
+    // );
+    // listViews.add(
+    //   GlassView(
+    //       animation: Tween<double>(begin: 0.0, end: 1.0).animate(
+    //           CurvedAnimation(
+    //               parent: widget.animationController,
+    //               curve: Interval((1 / count) * 8, 1.0,
+    //                   curve: Curves.fastOutSlowIn))),
+    //       animationController: widget.animationController),
+    // );
   }
 
   Future<bool> getData() async {
@@ -200,7 +256,10 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
 
         });
   }
+  void onClick(int x)
+  {
 
+  }
   Widget getMainListViewUI() {
     return FutureBuilder<bool>(
       future: getData(),
@@ -228,7 +287,7 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
     );
   }
 
-  Widget getAppBarUI() {
+  Widget getAppBarUI()  {
     return Column(
       children: <Widget>[
         AnimatedBuilder(
@@ -279,6 +338,89 @@ class _MyDiaryScreenState extends State<MyDiaryScreen>
                                     fontSize: 22 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: FitnessAppTheme.darkerText,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {
+
+                                  dateChange(-1);
+                                },
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_left,
+                                    color: FitnessAppTheme.grey,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 8,
+                                right: 8,
+                              ),
+                              child: Row(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(
+                                      Icons.calendar_today,
+                                      color: FitnessAppTheme.grey,
+                                      size: 18,
+                                    ),
+                                  ),
+
+                                  InkWell(child:Text(
+                                    '$dateNow',
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: FitnessAppTheme.fontName,
+                                      fontWeight: FontWeight.normal,
+                                      fontSize: 14,
+                                      letterSpacing: -0.2,
+                                      color: FitnessAppTheme.darkerText,
+                                    ),
+                                  ),
+                                    onTap: () {
+                                    showDatePicker(
+                                        context: context,
+                                        initialDate: now != null ? now : DateTime.now(),
+                                        firstDate: DateTime(2017),
+                                        lastDate: DateTime(2222)
+                                    ).then((value) {
+                                      // dateNow = DateFormat('d MMM').format(value);
+                                      now = value;
+                                      changeDate(DateFormat('yyyy-MM-dd').format(value));
+                                      setState(() {
+
+                                      });
+                                    });
+                                  }
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 38,
+                              width: 38,
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(32.0)),
+                                onTap: () {
+                                  dateChange(1);
+                                },
+                                child: Center(
+                                  child: Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: FitnessAppTheme.grey,
                                   ),
                                 ),
                               ),

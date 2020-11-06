@@ -12,13 +12,14 @@ dependencies:
   animated_splash_screen: ^1.0.1+2
   lottie: ^0.7.0+1
   splashscreen: ^1.2.0
+  convex_bottom_bar: ^2.6.0
+  bottom_navy_bar: ^5.5.0
   stacked: ^1.7.6
   rflutter_alert:
     git: git://github.com/RatelHub/rflutter_alert.git
   flutter_launcher_icons: ^0.8.1
   font_awesome_flutter: ^8.5.0
   toast: ^0.1.5
-  flutter_secure_storage: ^3.3.5
   flutter_spinkit: "^4.1.2"
   progress_dialog: ^1.2.4
 dev_dependencies:
