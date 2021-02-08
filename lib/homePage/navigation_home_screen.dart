@@ -60,19 +60,7 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         setState(() {
           screenView =  AsapAppHomeScreen();
         });
-      } else if (drawerIndex == DrawerIndex.Help) {
-        setState(() {
-          screenView = HelpScreen();
-        });
-      } else if (drawerIndex == DrawerIndex.FeedBack) {
-        setState(() {
-          screenView = FeedbackScreen();
-        });
-      } else if (drawerIndex == DrawerIndex.Invite) {
-        setState(() {
-          screenView = InviteFriend();
-        });
-      } else {
+
         //do in your way......
       }
     }

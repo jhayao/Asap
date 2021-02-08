@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:getwidget/getwidget.dart';
-import 'package:animated_background/fitness_app/asap_app_home_screen.dart';
 import 'package:animated_background/homePage/navigation_home_screen.dart';
 import 'package:animated_background/src/api/api.dart';
 import 'package:animated_background/src/custom_button.dart';
@@ -9,8 +8,6 @@ import 'package:animated_background/src/onboarding_page.dart';
 import 'package:animated_background/src/sign_up_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:toast/toast.dart';
 // import 'package:rich_alert/rich_alert.dart';

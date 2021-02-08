@@ -1,8 +1,4 @@
 import 'dart:developer';
-
-import 'package:animated_background/fitness_app/traning/event_screen.dart';
-import 'package:animated_background/fitness_app/ui_view/body_measurement.dart';
-import 'package:animated_background/fitness_app/ui_view/glass_view.dart';
 import 'package:animated_background/fitness_app/ui_view/attendance_view.dart';
 import 'package:animated_background/fitness_app/ui_view/title_view.dart';
 import 'package:animated_background/fitness_app/fintness_app_theme.dart';

@@ -10,6 +10,8 @@ import 'fintness_app_theme.dart';
 import 'Dashboard/dashboard_screen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:convert';
 class AsapAppHomeScreen extends StatefulWidget {
   // changeIndex(int x)=>createState().changeIndex(x);
   @override
@@ -27,8 +29,10 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
   );
   List<Widget> views;
   int index =0;
+  bool _isLoggedIn = false;
   @override
   void initState() {
+    _checkIfLoggedIn();
     _pageController = PageController();
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
@@ -38,10 +42,23 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
         duration: const Duration(milliseconds: 600), vsync: this);
     // tabBody = MyDashboardScreen(animationController: animationController,,);
 
+
     views=[MyDashboardScreen(animationController: animationController,changeBody: this.changeBody),EventScreen(animationController: animationController,),EventsScreen(animationController: animationController,)];
     super.initState();
   }
 
+  void _checkIfLoggedIn() async
+  {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    if(user['role_id'] == "1") {
+      setState(() {
+        _isLoggedIn = true;
+      });
+    }
+  }
   void changeBody(int x)
   {
     setState(() {
@@ -68,20 +85,36 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
         body: FutureBuilder<bool>(
           future: getData(),
           builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              return PageView(
-                controller: _pageController,
-                onPageChanged: (indexs){
-                  setState(() {
-                    index = indexs;
-                  });
-                },
-                children: <Widget>[
-                  Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
-                  Container(child: EventScreen(animationController: animationController,),),
-                  Container(child: EventsScreen(animationController: animationController,),),
-                  Container(color: Colors.blue,),
-                ],
-              );
+              if(_isLoggedIn)
+                return PageView(
+                  controller: _pageController,
+                  onPageChanged: (indexs){
+                    setState(() {
+                      index = indexs;
+                    });
+                  },
+                  children: <Widget>[
+                    Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
+                    Container(child: EventScreen(animationController: animationController,),),
+                    Container(child: EventsScreen(animationController: animationController,),),
+                    Container(color: Colors.blue,),
+                  ],
+                );
+              else
+                return PageView(
+                  controller: _pageController,
+                  onPageChanged: (indexs){
+                    setState(() {
+                      index = indexs;
+                    });
+                  },
+                  children: <Widget>[
+                    Container(child: EventScreen(animationController: animationController,),),
+                    Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
+                    Container(child: EventsScreen(animationController: animationController,),),
+                    Container(color: Colors.blue,),
+                  ],
+                );
           }
         ),
 
