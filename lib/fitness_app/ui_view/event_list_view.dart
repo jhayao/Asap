@@ -7,22 +7,22 @@ import 'package:animated_background/src/api/api.dart';
 import 'package:animated_background/src/entities/ssc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-
+import 'package:getwidget/getwidget.dart';
 import '../../main.dart';
 
-class EventsListView extends StatefulWidget {
-  const EventsListView(
-      {Key key, this.mainScreenAnimationController, this.mainScreenAnimation})
+class EventsListViews extends StatefulWidget {
+  const EventsListViews(
+      {Key key, this.mainScreenAnimationController, this.mainScreenAnimation, this.status})
       : super(key: key);
 
   final AnimationController mainScreenAnimationController;
   final Animation<dynamic> mainScreenAnimation;
-
+  final status;
   @override
-  _EventsListViewState createState() => _EventsListViewState();
+  _EventsListViewsState createState() => _EventsListViewsState();
 }
 
-class _EventsListViewState extends State<EventsListView>
+class _EventsListViewsState extends State<EventsListViews>
     with TickerProviderStateMixin {
   AnimationController animationController;
   Future eventFuture;
@@ -40,7 +40,24 @@ class _EventsListViewState extends State<EventsListView>
   }
 
   Future getEvents() async{
-    var response = await CallApi().getData('getEvents');
+    var response ;
+
+    if (widget.status == "today")
+      {
+        response =  await CallApi().getData('getEventToday');
+      }
+    else if(widget.status == "incoming")
+      {
+        response =  await CallApi().getData('getIncomingToday');
+      }
+    else if(widget.status == "done")
+    {
+      response =  await CallApi().getData('getDoneToday');
+    }
+    else
+      {
+        response =  await CallApi().getData('getEvents');
+      }
     var event = json.decode(response.body);
     int counter = 2 ;
     String imagePath = 'assets/fitness_app/breakfast.png';
@@ -54,25 +71,7 @@ class _EventsListViewState extends State<EventsListView>
       titleTxt = u['title'];
       fines =u['fines'];
       date = <String>[u['date'],u['start_time'],u['end_time']];
-      if(counter == 1){
 
-        startColor='#FA7D82';
-        endColor='#FA7D82';
-      }
-      else if(counter == 2){
-        startColor='#738AE6';
-        endColor='#5C5EDD';
-      }
-      else if(counter == 3){
-        startColor='#FE95B6';
-        endColor='#FF5287';
-      }
-      else if(counter == 4){
-        startColor ='#6F72CA';
-        endColor='#1E1466';
-        counter=0;
-      }
-      counter++;
       EventsListData data = EventsListData(_url +  u['image'], titleTxt, fines, date, startColor, endColor);
       eventsListData.add(data);
 
@@ -102,43 +101,78 @@ class _EventsListViewState extends State<EventsListView>
           child: Transform(
             transform: Matrix4.translationValues(
                 0.0, 30 * (1.0 - widget.mainScreenAnimation.value), 0.0),
-            child: Container(
-              height: 250,
-              width: double.infinity,
+            child: SingleChildScrollView(
               child: FutureBuilder(
-                future: eventFuture,
-                builder:(context,snapshot){
-                  if(snapshot.hasData){
-                    return ListView.builder(
-                      padding: const EdgeInsets.only(
-                          top: 0, bottom: 0, right: 16, left: 16),
-                      itemCount: eventsListData.length > 3 ? 3 : eventsListData.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (BuildContext context, int index) {
-                        final int count =
-                        eventsListData.length > 10 ? 10 : eventsListData.length;
-                        final Animation<double> animation =
-                        Tween<double>(begin: 0.0, end: 1.0).animate(
-                            CurvedAnimation(
-                                parent: animationController,
-                                curve: Interval((1 / count) * index, 1.0,
-                                    curve: Curves.fastOutSlowIn)));
-                        animationController.forward();
-                        return EventsView(
-                          eventsListData: eventsListData[index],
-                          animation: animation,
-                          animationController: animationController,
-                        );
-                      },
-                    );
-              }
-                  else{
-                    return SpinKitWave(
-                      color: Colors.blueAccent,
-                      size: 50.0,);
-                  }
-              }
-              )
+                      future: eventFuture,
+                      builder:(context,snapshot){
+                        if(snapshot.hasData){
+                          if(eventsListData.length != 0)
+                          return Container(
+                            height: MediaQuery.of(context).size.height -200,
+                            width: MediaQuery.of(context).size.width,
+                            child: ListView.builder(
+                              // Let the ListView know how many items it needs to build.
+                              itemCount: eventsListData.length,
+                              // Provide a builder function. This is where the magic happens.
+                              // Convert each item into a widget based on the type of item it is.
+                              itemBuilder: (context, index) {
+                                final item = eventsListData[index];
+                                return   GFCard(
+                                  boxFit: BoxFit.cover,
+                                  image: Image.network(item.imagePath),
+                                  title: GFListTile(
+                                    avatar: GFAvatar(
+                                      backgroundImage: NetworkImage(item.imagePath),
+                                    ),
+                                    title: Text(item.titleTxt),
+                                    subtitle: Text(item.date[0]),
+                                  ),
+                                  content: Text("Date: " + item.date[0] + '\n' +
+                                      "Sign in: " + item.date[1].substring(0,item.date[1].length -3)  + '\n' +
+                                      "Sign out: " + item.date[2].substring(0,item.date[2].length -3) + '\n'
+                                    ,
+                                    textAlign: TextAlign.left,
+                                    style: TextStyle(
+                                      fontFamily: FitnessAppTheme.fontName,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                      letterSpacing: 0.2,
+                                      color: FitnessAppTheme.nearlyBlack,
+                                    ),
+                                  ),
+                                  buttonBar: GFButtonBar(
+                                    children: <Widget>[
+                                      GFButton(
+                                        onPressed: () {},
+                                        text: 'Buy',
+                                      ),
+                                      GFButton(
+                                        onPressed: () {},
+                                        text: 'Cancel',
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                          else
+                            {
+                              return GFListTile(
+                                  avatar:GFAvatar(backgroundImage: AssetImage('lib/resources/images/empty.png')),
+                                  titleText:'Empty',
+                                  subtitleText:'No Event Found',
+                                  icon: Icon(Icons.favorite)
+                              );
+                            }
+                        }
+                        else{
+                          return SpinKitWave(
+                            color: Colors.blueAccent,
+                            size: 50.0,);
+                        }
+                      }
+                  )
             ),
           ),
         );
@@ -218,7 +252,7 @@ class EventsView extends StatelessWidget {
                             Expanded(
                               child: Padding(
                                 padding:
-                                    const EdgeInsets.only(top: 20, bottom: 10),
+                                const EdgeInsets.only(top: 20, bottom: 10),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -241,58 +275,58 @@ class EventsView extends StatelessWidget {
                             ),
                             eventsListData.fines != 0
                                 ? Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      Text(
-                                        'P'+ eventsListData.fines.toString(),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontFamily: FitnessAppTheme.fontName,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 25,
-                                          letterSpacing: 0.2,
-                                          color: FitnessAppTheme.white,
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 4, bottom: 3),
-                                        child: Text(
-                                          'Fines',
-                                          style: TextStyle(
-                                            fontFamily:
-                                                FitnessAppTheme.fontName,
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 10,
-                                            letterSpacing: 0.2,
-                                            color: FitnessAppTheme.white,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  )
-                                : Container(
-                                    decoration: BoxDecoration(
-                                      color: FitnessAppTheme.nearlyWhite,
-                                      shape: BoxShape.circle,
-                                      boxShadow: <BoxShadow>[
-                                        BoxShadow(
-                                            color: FitnessAppTheme.nearlyBlack
-                                                .withOpacity(0.4),
-                                            offset: Offset(8.0, 8.0),
-                                            blurRadius: 8.0),
-                                      ],
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(6.0),
-                                      child: Icon(
-                                        Icons.add,
-                                        color: HexColor(eventsListData.endColor),
-                                        size: 24,
-                                      ),
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: <Widget>[
+                                Text(
+                                  'P'+ eventsListData.fines.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontFamily: FitnessAppTheme.fontName,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                    letterSpacing: 0.2,
+                                    color: FitnessAppTheme.white,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 4, bottom: 3),
+                                  child: Text(
+                                    'Fines',
+                                    style: TextStyle(
+                                      fontFamily:
+                                      FitnessAppTheme.fontName,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 10,
+                                      letterSpacing: 0.2,
+                                      color: FitnessAppTheme.white,
                                     ),
                                   ),
+                                ),
+                              ],
+                            )
+                                : Container(
+                              decoration: BoxDecoration(
+                                color: FitnessAppTheme.nearlyWhite,
+                                shape: BoxShape.circle,
+                                boxShadow: <BoxShadow>[
+                                  BoxShadow(
+                                      color: FitnessAppTheme.nearlyBlack
+                                          .withOpacity(0.4),
+                                      offset: Offset(8.0, 8.0),
+                                      blurRadius: 8.0),
+                                ],
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
+                                child: Icon(
+                                  Icons.add,
+                                  color: HexColor(eventsListData.endColor),
+                                  size: 24,
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),

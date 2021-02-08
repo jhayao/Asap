@@ -330,12 +330,12 @@ class _MyDashboardScreenState extends State<MyDashboardScreen>
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Text(
-                                  'Dasboard',
+                                  'Dashboard',
                                   textAlign: TextAlign.left,
                                   style: TextStyle(
                                     fontFamily: FitnessAppTheme.fontName,
                                     fontWeight: FontWeight.w700,
-                                    fontSize: 22 + 6 - 6 * topBarOpacity,
+                                    fontSize: 20 + 6 - 6 * topBarOpacity,
                                     letterSpacing: 1.2,
                                     color: FitnessAppTheme.darkerText,
                                   ),
@@ -343,8 +343,8 @@ class _MyDashboardScreenState extends State<MyDashboardScreen>
                               ),
                             ),
                             SizedBox(
-                              height: 38,
-                              width: 38,
+                              height: 25,
+                              width: 20,
                               child: InkWell(
                                 highlightColor: Colors.transparent,
                                 borderRadius: const BorderRadius.all(

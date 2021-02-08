@@ -21,6 +21,7 @@ class AttendanceView extends StatelessWidget {
     String body;
     try{
       body=json.decode(res.body).toString();
+      print(body);
     }catch (e){
       print("Error:");
       print(e);
@@ -33,6 +34,7 @@ class AttendanceView extends StatelessWidget {
     String body;
     try{
       body=json.decode(res.body).toString();
+      print(body);
     }catch (e){
 
       print(e);
@@ -40,10 +42,12 @@ class AttendanceView extends StatelessWidget {
     return body;
   }
   Future<String> getPresents(String date) async{
+    print(date);
     var res = await CallApi().getData('getPresents/$date');
     String body="0";
     try{
       body=json.decode(res.body).toString();
+      print(body);
     }catch (e){
       print("Error:");
       print(e);

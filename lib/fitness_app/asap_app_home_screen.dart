@@ -2,10 +2,9 @@
 import 'package:animated_background/fitness_app/Dashboard/event_list_view.dart';
 import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
 import 'package:animated_background/fitness_app/traning/event_screen.dart';
+import 'package:animated_background/fitness_app/Events/events_screen.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
-
 import 'package:flutter/material.dart';
-
 import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
 import 'Dashboard/dashboard_screen.dart';
@@ -39,7 +38,7 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
         duration: const Duration(milliseconds: 600), vsync: this);
     // tabBody = MyDashboardScreen(animationController: animationController,,);
 
-    views=[MyDashboardScreen(animationController: animationController,changeBody: this.changeBody),EventScreen(animationController: animationController,),EventScreen(animationController: animationController,)];
+    views=[MyDashboardScreen(animationController: animationController,changeBody: this.changeBody),EventScreen(animationController: animationController,),EventsScreen(animationController: animationController,)];
     super.initState();
   }
 
@@ -79,7 +78,7 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
                 children: <Widget>[
                   Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
                   Container(child: EventScreen(animationController: animationController,),),
-                  Container(color: Colors.green,),
+                  Container(child: EventsScreen(animationController: animationController,),),
                   Container(color: Colors.blue,),
                 ],
               );

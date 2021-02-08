@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:getwidget/getwidget.dart';
 import 'package:animated_background/fitness_app/asap_app_home_screen.dart';
 import 'package:animated_background/homePage/navigation_home_screen.dart';
 import 'package:animated_background/src/api/api.dart';
@@ -292,9 +292,14 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
           height: 40,
           child: new Row(
             children: [
-              SpinKitFadingCircle(
-                color: Colors.blueAccent,
-                size: 40.0,
+              // SpinKitFadingCircle(
+              //   color: Colors.blueAccent,
+              //   size: 40.0,
+              // ),
+              // Container(margin: EdgeInsets.only(left: 15),child:Text("Signing in" )),
+              GFLoader(
+                type: GFLoaderType.circle,
+                size: 20.0,
               ),
               Container(margin: EdgeInsets.only(left: 15),child:Text("Signing in" )),
             ],),

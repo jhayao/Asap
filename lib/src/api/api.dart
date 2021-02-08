@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class CallApi{
-      final String _url = 'http://ssc.codes/api/';
+      final String _url = 'https://ssc.codes/api/';
 
       postData(data,apiUrl) async {
           var fullUrl = _url + apiUrl;

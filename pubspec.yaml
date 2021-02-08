@@ -22,6 +22,8 @@ dependencies:
   toast: ^0.1.5
   flutter_spinkit: "^4.1.2"
   progress_dialog: ^1.2.4
+  getwidget: ^1.2.4
+  cached_network_image: ^2.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -35,6 +37,7 @@ flutter:
   - lib/resources/lottie/
   - assets/fitness_app/
   - assets/images/
+  - lib/resources/images/warn.png
 module:
   androidX: true
 

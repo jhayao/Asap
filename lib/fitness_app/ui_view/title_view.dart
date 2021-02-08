@@ -70,6 +70,7 @@ class TitleView extends StatelessWidget {
                                 color: FitnessAppTheme.nearlyDarkBlue,
                               ),
                             ),
+                            if(subTxt != "")
                             SizedBox(
                               height: 38,
                               width: 26,
