@@ -53,7 +53,8 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
 
     var userJson = localStorage.getString('user');
     var user = json.decode(userJson);
-    if(user['role_id'] == "1") {
+    print(user);
+    if(user['role_id'] == 1) {
       setState(() {
         _isLoggedIn = true;
       });
