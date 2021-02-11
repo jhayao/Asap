@@ -66,6 +66,7 @@ class _AnimatedBackgoundState extends State<AnimatedBackground>
             switch(snapshot.connectionState)
             {
               case ConnectionState.none:
+                print("Connection State: None");
                 return Text("None");
 
             case ConnectionState.done:

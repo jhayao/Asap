@@ -14,7 +14,6 @@ class EventsListViews extends StatefulWidget {
   const EventsListViews(
       {Key key, this.mainScreenAnimationController, this.mainScreenAnimation, this.status})
       : super(key: key);
-
   final AnimationController mainScreenAnimationController;
   final Animation<dynamic> mainScreenAnimation;
   final status;
@@ -31,6 +30,7 @@ class _EventsListViewsState extends State<EventsListViews>
   @override
   void initState() {
     eventFuture = getEvents();
+    print(widget.status);
     // getEvents();
     animationController = AnimationController(
         duration: const Duration(milliseconds: 2000), vsync: this);
@@ -41,7 +41,7 @@ class _EventsListViewsState extends State<EventsListViews>
 
   Future getEvents() async{
     var response ;
-
+    eventsListData.clear();
     if (widget.status == "today")
       {
         response =  await CallApi().getData('getEventToday');
@@ -108,7 +108,7 @@ class _EventsListViewsState extends State<EventsListViews>
                         if(snapshot.hasData){
                           if(eventsListData.length != 0)
                           return Container(
-                            height: MediaQuery.of(context).size.height -200,
+                            height: MediaQuery.of(context).size.height - 250,
                             width: MediaQuery.of(context).size.width,
                             child: ListView.builder(
                               // Let the ListView know how many items it needs to build.

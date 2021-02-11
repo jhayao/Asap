@@ -3,7 +3,6 @@ import 'package:animated_background/fitness_app/ui_view/running_view.dart';
 import 'package:animated_background/fitness_app/ui_view/title_view.dart';
 import 'package:animated_background/fitness_app/ui_view/workout_view.dart';
 import 'package:flutter/material.dart';
-
 import '../fintness_app_theme.dart';
 
 class EventScreen extends StatefulWidget {

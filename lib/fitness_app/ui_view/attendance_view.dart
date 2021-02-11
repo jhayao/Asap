@@ -8,20 +8,26 @@ import 'package:flutter/material.dart';
 import 'dart:math' as math;
 
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-class AttendanceView extends StatelessWidget {
+class AttendanceView extends StatefulWidget {
   final AnimationController animationController;
   final Animation animation;
   final dateNow;
   AttendanceView(
       {Key key, this.dateNow, this.animationController, this.animation})
       : super(key: key);
-  Future<String> getSign(String stat,String date) async{
 
+  @override
+  _AttendanceViewState createState() => _AttendanceViewState();
+}
+
+class _AttendanceViewState extends State<AttendanceView> {
+  Future<String> getSign(String stat,String date) async{
+    print("Date: $date");
     var res = await CallApi().getData('getActive/$stat/$date');
     String body;
     try{
       body=json.decode(res.body).toString();
-      print(body);
+
     }catch (e){
       print("Error:");
       print(e);
@@ -41,8 +47,11 @@ class AttendanceView extends StatelessWidget {
     }
     return body;
   }
+
   Future<String> getPresents(String date) async{
-    print(date);
+    print(widget.dateNow);
+    String hello = widget.dateNow;
+    print("Date Now: $hello" );
     var res = await CallApi().getData('getPresents/$date');
     String body="0";
     try{
@@ -55,13 +64,16 @@ class AttendanceView extends StatelessWidget {
     // print(body);
     return body;
   }
+
   String _numStudents, _numPresents,_present='0',_late='0',_absent='0';
 
   double _widthPres=0,_widthLate=0,_widthAbs=0;
+
   @override
   Widget build(BuildContext context) {
+    print(widget.dateNow);
     return FutureBuilder(
-        future: Future.wait([getStats(),getSign("Present",dateNow),getSign("Late",dateNow),getSign("Absent",dateNow)]),
+        future: Future.wait([getStats(),getSign("Present",widget.dateNow),getSign("Late",widget.dateNow),getSign("Absent",widget.dateNow)]),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.done:
@@ -104,15 +116,15 @@ class AttendanceView extends StatelessWidget {
               _widthPres = (int.parse(_present) / Total) * 70;
               _widthLate =  (int.parse(_late) / Total) * 70;
               _widthAbs =  (int.parse(_absent) / Total) * 70;
-              
+
               return AnimatedBuilder(
-                animation: animationController,
+                animation: widget.animationController,
                 builder: (BuildContext context, Widget child) {
                   return FadeTransition(
-                    opacity: animation,
+                    opacity: widget.animation,
                     child: new Transform(
                       transform: new Matrix4.translationValues(
-                          0.0, 30 * (1.0 - animation.value), 0.0),
+                          0.0, 30 * (1.0 - widget.animation.value), 0.0),
                       child: Padding(
                         padding: const EdgeInsets.only(
                             left: 24, right: 24, top: 16, bottom: 18),
@@ -216,7 +228,7 @@ class AttendanceView extends StatelessWidget {
                                                                 left: 4,
                                                                 bottom: 3),
                                                             child: Text(
-                                                              '${(_numPresents!=null ? int.parse(_numPresents) : 0 * animation.value).toInt()}',
+                                                              '${(_numPresents!=null ? int.parse(_numPresents) : 0 * widget.animation.value).toInt()}',
                                                               textAlign:
                                                               TextAlign
                                                                   .center,
@@ -343,7 +355,7 @@ class AttendanceView extends StatelessWidget {
                                                                 left: 4,
                                                                 bottom: 3),
                                                             child: Text(
-                                                              '${(int.parse(_numStudents!=null? _numStudents : "0") * animation.value).toInt()}',
+                                                              '${(int.parse(_numStudents!=null? _numStudents : "0") * widget.animation.value).toInt()}',
                                                               textAlign:
                                                               TextAlign
                                                                   .center,
@@ -430,7 +442,7 @@ class AttendanceView extends StatelessWidget {
                                                   CrossAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text(
-                                                      '${(percentage * animation.value).toDouble().isNaN?0:(percentage * animation.value).toDouble()}' + "%",
+                                                      '${(percentage * widget.animation.value).toDouble().isNaN?0:(percentage * widget.animation.value).toDouble()}' + "%",
                                                       textAlign:
                                                       TextAlign.center,
                                                       style: TextStyle(
@@ -481,7 +493,7 @@ class AttendanceView extends StatelessWidget {
                                                     angle: double.parse(angle) +
                                                         (360 - double.parse(angle)) *
                                                             (1.0 -
-                                                                animation
+                                                                widget.animation
                                                                     .value)),
                                                 child: SizedBox(
                                                   width: 108,
@@ -548,7 +560,7 @@ class AttendanceView extends StatelessWidget {
                                                 children: <Widget>[
                                                   Container(
                                                     width: ((_widthPres.isNaN?0:_widthPres) *
-                                                        animation.value),
+                                                        widget.animation.value),
                                                     height: 4,
                                                     decoration: BoxDecoration(
                                                       gradient: LinearGradient(
@@ -631,7 +643,7 @@ class AttendanceView extends StatelessWidget {
                                                     children: <Widget>[
                                                       Container(
                                                         width: ((_widthLate.isNaN?0:_widthLate) *
-                                                            animationController
+                                                            widget.animationController
                                                                 .value),
                                                         height: 4,
                                                         decoration:
@@ -721,7 +733,7 @@ class AttendanceView extends StatelessWidget {
                                                     children: <Widget>[
                                                       Container(
                                                         width: ((_widthAbs.isNaN?0:_widthAbs) *
-                                                            animationController
+                                                            widget.animationController
                                                                 .value),
                                                         height: 4,
                                                         decoration:

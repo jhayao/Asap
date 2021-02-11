@@ -1,14 +1,12 @@
-import 'package:animated_background/fitness_app/Dashboard/event_list_view.dart';
-import 'package:animated_background/fitness_app/ui_view/area_list_view.dart';
+
+import 'package:animated_background/fitness_app/ui_view/chip_choice.dart';
 import 'package:animated_background/fitness_app/ui_view/event_list_view.dart';
-import 'package:animated_background/fitness_app/ui_view/running_view.dart';
-import 'package:animated_background/fitness_app/ui_view/title_view.dart';
-import 'package:animated_background/fitness_app/ui_view/workout_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
-
+import 'package:chips_choice/chips_choice.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../fintness_app_theme.dart';
-
+import 'package:chips_choice/chips_choice.dart';
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key key, this.animationController}) : super(key: key);
 
@@ -24,15 +22,15 @@ class _EventsScreenState extends State<EventsScreen>
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-
+  String _status = "done";
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData();
-
+    addAllListData2();
+    pickEvent();
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -59,73 +57,57 @@ class _EventsScreenState extends State<EventsScreen>
     super.initState();
   }
 
+  void pickEvent() async
+  {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token= localStorage.getString('pickEvent');
+    if(token != null) {
+      refreshList();
+      setState(() {
+        _status = token;
+        print("CHeck:");
+        print(_status);
+      });
+
+    }
+
+  }
+  void refreshList()
+  {
+    // listViews.removeAt(1);
+    listViews.clear();
+    addAllListData();
+  }
+
+
+
+  void changeDate(String date) {
+
+    listViews.clear();
+    addAllListData();
+  }
+
   void addAllListData() {
+    print("\n\n\n\nStart of New");
+    print(listViews.length);
+    print("new List");
     const int count = 5;
 
-    listViews.add(
-        GFAccordion(
-            title: 'Event Now',
-            contentChild: EventsListViews(mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-                CurvedAnimation(
-                    parent: widget.animationController,
-                    curve: Interval((1 / count) * 3, 1.0,
-                        curve: Curves.fastOutSlowIn))),
-              mainScreenAnimationController: widget.animationController,
-            status: "today"),
-          showAccordion: true,
-        )
-    );
-    listViews.add(
-        GFAccordion(
-          title: 'Incoming Events',
-          contentChild: EventsListViews(mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController,
-                  curve: Interval((1 / count) * 3, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-            mainScreenAnimationController: widget.animationController,
-              status: "incoming"),
+
+    listViews.add(Choice(hello : () => pickEvent()
+    ));
+
+    print(listViews.length);
+  }
+  void addAllListData2() {
+    print(listViews.length);
+    print("Primary List");
+    const int count = 5;
 
 
-        )
-    );
-    listViews.add(
-        GFAccordion(
-          title: 'Done Events',
-          contentChild: EventsListViews(mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                  parent: widget.animationController,
-                  curve: Interval((1 / count) * 3, 1.0,
-                      curve: Curves.fastOutSlowIn))),
-              mainScreenAnimationController: widget.animationController,
-              status: "done"),
-
-
-        )
-    );
-    listViews.add(
-    GFAccordion(
-    title: 'All Events',
-    contentChild: EventsListViews(mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-    CurvedAnimation(
-    parent: widget.animationController,
-    curve: Interval((1 / count) * 3, 1.0,
-    curve: Curves.fastOutSlowIn))),
-    mainScreenAnimationController: widget.animationController,
-    status: "all"),
-
-
-    )
-    );
-  // listViews.add(
-  //     EventsListViews(mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
-  //       CurvedAnimation(
-  //           parent: widget.animationController,
-  //           curve: Interval((1 / count) * 3, 1.0,
-  //               curve: Curves.fastOutSlowIn))),
-  //     mainScreenAnimationController: widget.animationController,)
-  // );
-
+    listViews.add(Choice(
+    ));
+    listViews.add(Text("Hello"));
   }
 
   Future<bool> getData() async {
@@ -153,12 +135,14 @@ class _EventsScreenState extends State<EventsScreen>
   }
 
   Widget getMainListViewUI() {
+    print("Building");
     return FutureBuilder<bool>(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
+
           return ListView.builder(
             controller: scrollController,
             padding: EdgeInsets.only(

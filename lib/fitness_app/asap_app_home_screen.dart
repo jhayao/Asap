@@ -1,8 +1,9 @@
 
-import 'package:animated_background/fitness_app/Dashboard/event_list_view.dart';
 import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
+import 'package:animated_background/fitness_app/test.dart';
 import 'package:animated_background/fitness_app/traning/event_screen.dart';
 import 'package:animated_background/fitness_app/Events/events_screen.dart';
+import 'package:animated_background/fitness_app/ui_view/chip_choice.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
@@ -97,8 +98,8 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
                   children: <Widget>[
                     Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
                     Container(child: EventScreen(animationController: animationController,),),
-                    Container(child: EventsScreen(animationController: animationController,),),
-                    Container(color: Colors.blue,),
+                    Container(child: ListDisplay(animationController: animationController,)),
+                    Container(color: Colors.red,),
                   ],
                 );
               else
@@ -159,10 +160,8 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: Icon(Icons.message),
-          title: Text(
-            'Messages test for mes teset test test ',
-          ),
+          icon: Icon(Icons.calendar_today),
+          title: Text("Events"),
           activeColor: Colors.pink,
           textAlign: TextAlign.center,
         ),
