@@ -1,6 +1,4 @@
 
-import 'package:animated_background/fitness_app/ui_view/chip_choice.dart';
-import 'package:animated_background/fitness_app/ui_view/event_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:chips_choice/chips_choice.dart';
@@ -94,9 +92,6 @@ class _EventsScreenState extends State<EventsScreen>
     const int count = 5;
 
 
-    listViews.add(Choice(hello : () => pickEvent()
-    ));
-
     print(listViews.length);
   }
   void addAllListData2() {
@@ -105,8 +100,7 @@ class _EventsScreenState extends State<EventsScreen>
     const int count = 5;
 
 
-    listViews.add(Choice(
-    ));
+
     listViews.add(Text("Hello"));
   }
 

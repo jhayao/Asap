@@ -3,7 +3,6 @@ import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
 import 'package:animated_background/fitness_app/test.dart';
 import 'package:animated_background/fitness_app/traning/event_screen.dart';
 import 'package:animated_background/fitness_app/Events/events_screen.dart';
-import 'package:animated_background/fitness_app/ui_view/chip_choice.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
