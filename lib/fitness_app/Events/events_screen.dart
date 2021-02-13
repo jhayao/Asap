@@ -1,10 +1,12 @@
-
+import 'package:animated_background/fitness_app/ui_view/area_list_view.dart';
+import 'package:animated_background/fitness_app/ui_view/events_list.dart';
+import 'package:animated_background/fitness_app/ui_view/running_view.dart';
+import 'package:animated_background/fitness_app/ui_view/title_view.dart';
+import 'package:animated_background/fitness_app/ui_view/workout_view.dart';
+import 'package:chips_choice/chips_choice.dart';
 import 'package:flutter/material.dart';
-import 'package:getwidget/getwidget.dart';
-import 'package:chips_choice/chips_choice.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../fintness_app_theme.dart';
-import 'package:chips_choice/chips_choice.dart';
+
 class EventsScreen extends StatefulWidget {
   const EventsScreen({Key key, this.animationController}) : super(key: key);
 
@@ -16,19 +18,22 @@ class EventsScreen extends StatefulWidget {
 class _EventsScreenState extends State<EventsScreen>
     with TickerProviderStateMixin {
   Animation<double> topBarAnimation;
-
+  int tag=0;
+  List<String> options = [
+    'All', 'Event\'s Today', 'Event\'s Done', 'Incoming Events'
+  ];
   List<Widget> listViews = <Widget>[];
   final ScrollController scrollController = ScrollController();
   double topBarOpacity = 0.0;
-  String _status = "done";
+
   @override
   void initState() {
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
             parent: widget.animationController,
             curve: Interval(0, 0.5, curve: Curves.fastOutSlowIn)));
-    addAllListData2();
-    pickEvent();
+    addAllListData();
+
     scrollController.addListener(() {
       if (scrollController.offset >= 24) {
         if (topBarOpacity != 1.0) {
@@ -44,7 +49,6 @@ class _EventsScreenState extends State<EventsScreen>
           });
         }
       } else if (scrollController.offset <= 0) {
-      } else if (scrollController.offset <= 0) {
         if (topBarOpacity != 0.0) {
           setState(() {
             topBarOpacity = 0.0;
@@ -55,53 +59,19 @@ class _EventsScreenState extends State<EventsScreen>
     super.initState();
   }
 
-  void pickEvent() async
-  {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var token= localStorage.getString('pickEvent');
-    if(token != null) {
-      refreshList();
-      setState(() {
-        _status = token;
-        print("CHeck:");
-        print(_status);
-      });
-
-    }
-
-  }
-  void refreshList()
-  {
-    // listViews.removeAt(1);
-    listViews.clear();
-    addAllListData();
-  }
-
-
-
-  void changeDate(String date) {
-
-    listViews.clear();
-    addAllListData();
-  }
-
   void addAllListData() {
-    print("\n\n\n\nStart of New");
-    print(listViews.length);
-    print("new List");
     const int count = 5;
+    listViews.add(
+      EventsList(
+        mainScreenAnimation: Tween<double>(begin: 0.0, end: 1.0).animate(
+            CurvedAnimation(
+                parent: widget.animationController,
+                curve: Interval((1 / count) * 3, 1.0,
+                    curve: Curves.fastOutSlowIn))),
+        mainScreenAnimationController: widget.animationController,
+      ),
+    );
 
-
-    print(listViews.length);
-  }
-  void addAllListData2() {
-    print(listViews.length);
-    print("Primary List");
-    const int count = 5;
-
-
-
-    listViews.add(Text("Hello"));
   }
 
   Future<bool> getData() async {
@@ -117,6 +87,22 @@ class _EventsScreenState extends State<EventsScreen>
         backgroundColor: Colors.transparent,
         body: Stack(
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                top: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top + 0,
+                bottom: 0 + MediaQuery.of(context).padding.bottom,
+              ),
+              child: ChipsChoice<int>.single(
+                value: tag,
+                onChanged: (val) => setState(() => tag = val),
+                choiceItems: C2Choice.listFrom<int, String>(
+                  source: options,
+                  value: (i, v) => i,
+                  label: (i, v) => v,
+                  tooltip: (i, v) => v,
+                ),),
+            ),
             getMainListViewUI(),
             getAppBarUI(),
             SizedBox(
@@ -129,28 +115,33 @@ class _EventsScreenState extends State<EventsScreen>
   }
 
   Widget getMainListViewUI() {
-    print("Building");
     return FutureBuilder<bool>(
       future: getData(),
       builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
         if (!snapshot.hasData) {
           return const SizedBox();
         } else {
-
-          return ListView.builder(
-            controller: scrollController,
+          return Padding(
             padding: EdgeInsets.only(
               top: AppBar().preferredSize.height +
-                  MediaQuery.of(context).padding.top +
-                  24,
-              bottom: 62 + MediaQuery.of(context).padding.bottom,
+                  MediaQuery.of(context).padding.top + 0,
+              bottom: 0 + MediaQuery.of(context).padding.bottom,
             ),
-            itemCount: listViews.length,
-            scrollDirection: Axis.vertical,
-            itemBuilder: (BuildContext context, int index) {
-              widget.animationController.forward();
-              return listViews[index];
-            },
+            child: ListView.builder(
+              controller: scrollController,
+              padding: EdgeInsets.only(
+                top: AppBar().preferredSize.height +
+                    MediaQuery.of(context).padding.top +
+                    0,
+                bottom:  MediaQuery.of(context).padding.bottom,
+              ),
+              itemCount: listViews.length,
+              scrollDirection: Axis.vertical,
+              itemBuilder: (BuildContext context, int index) {
+                widget.animationController.forward();
+                return listViews[index];
+              },
+            ),
           );
         }
       },

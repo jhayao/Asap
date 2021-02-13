@@ -156,16 +156,20 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
                     tooltip: (i, v) => v,
                   ),),),
               getAppBarUI(),
-              Expanded(
-                    child:Padding(
-                      padding: EdgeInsets.only(
-                        top: AppBar().preferredSize.height +
-                            MediaQuery.of(context).padding.top + 62 ,
-                        bottom:MediaQuery.of(context).padding.bottom,
-                      ),
-                      child: EventsLoad(),
+              Column(
+                children: [
+                  Expanded(
+                        child:Padding(
+                          padding: EdgeInsets.only(
+                            top: AppBar().preferredSize.height +
+                                MediaQuery.of(context).padding.top + 62 ,
+                            bottom:MediaQuery.of(context).padding.bottom,
+                          ),
+                          child: EventsLoad(),
+                        ),
                     ),
-                ),
+                ],
+              ),
             ],
           )
       ),
@@ -192,7 +196,6 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
       response =  await CallApi().getData('getEvents');
     }
     var event = json.decode(response.body);
-    print("Event: $event");
     int counter = 2 ;
     String imagePath = 'assets/fitness_app/breakfast.png';
     String titleTxt="Breakfast";
@@ -218,7 +221,6 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
       return FutureBuilder(
           future: loadEvents,
           builder: (context,snapshot){
-            print(snapshot);
                 if(ConnectionState.done == snapshot.connectionState) {
                   if(eventsListData.length>=1)
                     {
@@ -270,7 +272,7 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
                     return Padding(
                       padding: EdgeInsets.only(
                         top: AppBar().preferredSize.height +
-                            MediaQuery.of(context).padding.top + 62 ,
+                            MediaQuery.of(context).padding.top -30 ,
                         bottom:MediaQuery.of(context).padding.bottom,
                       ),
                       child: EmptyListWidget(

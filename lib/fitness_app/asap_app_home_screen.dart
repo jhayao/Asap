@@ -3,15 +3,16 @@ import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
 import 'package:animated_background/fitness_app/test.dart';
 import 'package:animated_background/fitness_app/traning/event_screen.dart';
 import 'package:animated_background/fitness_app/Events/events_screen.dart';
+import 'package:animated_background/fitness_app/ui/friends/friends_list_page.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
 import 'fintness_app_theme.dart';
 import 'Dashboard/dashboard_screen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
+import 'User/userList.dart';
 class AsapAppHomeScreen extends StatefulWidget {
   // changeIndex(int x)=>createState().changeIndex(x);
   @override
@@ -96,9 +97,10 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
                   },
                   children: <Widget>[
                     Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
-                    Container(child: EventScreen(animationController: animationController,),),
+                    // Container(child: EventScreen(animationController: animationController,),),
                     Container(child: ListDisplay(animationController: animationController,)),
-                    Container(color: Colors.red,),
+                    Container(child: EventsScreen(animationController: animationController,),),
+                    Container(child: UserList(animationController: animationController,)),
                   ],
                 );
               else
