@@ -21,7 +21,6 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
   int tag =0;
   double topBarOpacity = 0.0;
   Animation<double> topBarAnimation;
-  AnimationController animationController;
   final ScrollController scrollController = ScrollController();
   List<String> options = [
     'All', 'Event\'s Today', 'Event\'s Done', 'Incoming Events'
@@ -30,8 +29,6 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
   @override
   void initState() {
     // TODO: implement initState
-    animationController =
-        AnimationController(vsync: this, duration: Duration(seconds: 3));
     loadEvents=getEvents();
     topBarAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
@@ -67,7 +64,7 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
     return Column(
       children: <Widget>[
         AnimatedBuilder(
-          animation: animationController,
+          animation: widget.animationController,
           builder: (BuildContext context, Widget child) {
             return FadeTransition(
               opacity: topBarAnimation,
@@ -216,8 +213,7 @@ class DyanmicList extends State<ListDisplay>  with TickerProviderStateMixin{
     return true;
   }
   List<EventsListData> eventsListData = [];
-  Widget EventsLoad()
-  {
+  Widget EventsLoad() {
       return FutureBuilder(
           future: loadEvents,
           builder: (context,snapshot){

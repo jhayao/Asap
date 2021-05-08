@@ -15,17 +15,22 @@ dependencies:
   convex_bottom_bar: ^2.6.0
   bottom_navy_bar: ^5.5.0
   stacked: ^1.7.6
-  rflutter_alert:
-    git: git://github.com/RatelHub/rflutter_alert.git
   flutter_launcher_icons: ^0.8.1
   font_awesome_flutter: ^8.5.0
   toast: ^0.1.5
+  intl: ^0.16.0
   flutter_spinkit: "^4.1.2"
   progress_dialog: ^1.2.4
   getwidget: ^1.2.4
   chips_choice: ^2.0.1
   empty_widget: ^0.0.1-dev.1
-  smart_select: ^4.3.2
+  qr_flutter: ^4.0.0
+  qr_code_scanner: ^0.4.0
+  dropdown_search: ^0.5.0
+  dio: ^3.0.10
+
+  settings_ui: ^1.0.0
+  permission_handler: ^5.1.0+2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -35,6 +40,7 @@ flutter:
   - lib/resources/images/background.png
   - lib/resources/images/logo.png
   - lib/resources/images/icon-back.png
+  - lib/resources/images/im_emptyIcon_2.png
   - lib/resources/images/profile_header_background.png
   - lib/resources/images/
   - lib/resources/lottie/

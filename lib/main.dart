@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:splashscreen/splashscreen.dart';
 
 import 'homePage/navigation_home_screen.dart';

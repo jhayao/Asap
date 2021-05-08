@@ -1,3 +1,4 @@
+import 'package:animated_background/fitness_app/payment/paymentpage.dart';
 import 'package:animated_background/src/custom_button.dart';
 import 'package:animated_background/src/onboarding_page.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,6 +21,7 @@ class SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
 
   AnimationController _signInAnimationController;
   Animation<double> _signInAnimation;
+  TextEditingController studentID = TextEditingController();
 
   @override
   void initState() {
@@ -85,16 +87,19 @@ class SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
   }
 
   void _handleOnPressedBalance(){
-    Navigator.pushReplacement(
+    Navigator.push<dynamic>(
       context,
-      PageRouteBuilder(pageBuilder: (context, anim1, anim2) => ExpenseTrackerApp()),
+      MaterialPageRoute<dynamic>(
+        builder: (BuildContext context) => CourseInfoScreen(studentNumber: studentID.text , user_type: 'user',)
+      ),
     );
+
   }
 
 
   Future<bool> _onWillPop() {
     _handleOnTabBackButton();
-    return Future.delayed(Duration.zero, () {
+     Future.delayed(Duration.zero, () {
       _handleOnTabBackButton();
     });
   }
@@ -112,7 +117,7 @@ class SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset : false,
         body: Stack(
           children: <Widget>[
             Image.asset(
@@ -158,6 +163,7 @@ class SignUpPageState extends State<SignUpPage> with TickerProviderStateMixin {
                   Container(
                     margin: EdgeInsets.symmetric(horizontal: 32),
                     child: TextField(
+                      controller: studentID,
                       style: TextStyle(
                         color: Colors.white,
                       ),

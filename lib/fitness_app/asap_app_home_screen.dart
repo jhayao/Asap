@@ -1,9 +1,11 @@
-
+import 'package:animated_background/fitness_app/event_list/shoes_store_page.dart';
 import 'package:animated_background/fitness_app/models/tabIcon_data.dart';
-import 'package:animated_background/fitness_app/test.dart';
-import 'package:animated_background/fitness_app/traning/event_screen.dart';
+import 'package:animated_background/fitness_app/payment/payment.dart';
+import 'package:animated_background/fitness_app/payment/paymentpage.dart';
+
 import 'package:animated_background/fitness_app/Events/events_screen.dart';
-import 'package:animated_background/fitness_app/ui/friends/friends_list_page.dart';
+import 'package:animated_background/qr/generate.dart';
+import 'package:animated_background/qr/try.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:flutter/material.dart';
 import 'bottom_navigation_view/bottom_bar_view.dart';
@@ -12,7 +14,7 @@ import 'Dashboard/dashboard_screen.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'User/userList.dart';
+
 class AsapAppHomeScreen extends StatefulWidget {
   // changeIndex(int x)=>createState().changeIndex(x);
   @override
@@ -29,11 +31,15 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
     color: FitnessAppTheme.background,
   );
   List<Widget> views;
-  int index =0;
+  int index = 0;
   bool _isLoggedIn = false;
+  String username;
+  String user_type;
+
   @override
   void initState() {
     _checkIfLoggedIn();
+    _getUsername();
     _pageController = PageController();
     tabIconsList.forEach((TabIconData tab) {
       tab.isSelected = false;
@@ -43,33 +49,48 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
         duration: const Duration(milliseconds: 600), vsync: this);
     // tabBody = MyDashboardScreen(animationController: animationController,,);
 
-
-    views=[MyDashboardScreen(animationController: animationController,changeBody: this.changeBody),EventScreen(animationController: animationController,),EventsScreen(animationController: animationController,)];
+    views = [
+      MyDashboardScreen(
+          animationController: animationController,
+          changeBody: this.changeBody),
+      EventsScreen(
+        animationController: animationController,
+      )
+    ];
     super.initState();
   }
 
-  void _checkIfLoggedIn() async
-  {
+  void _getUsername() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
 
     var userJson = localStorage.getString('user');
     var user = json.decode(userJson);
-    print(user);
-    if(user['role_id'] == 1) {
+    setState(() {
+      username = user['username'];
+      user_type = user['user_type'];
+    });
+  }
+
+  void _checkIfLoggedIn() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+
+    if (user['role_id'] == 1) {
       setState(() {
         _isLoggedIn = true;
       });
     }
   }
-  void changeBody(int x)
-  {
+
+  void changeBody(int x) {
     setState(() {
-      this.index =x;
+      this.index = x;
       _pageController.jumpToPage(this.index);
     });
-
-
   }
+
   @override
   void dispose() {
     animationController.dispose();
@@ -85,42 +106,55 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: FutureBuilder<bool>(
-          future: getData(),
-          builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              if(_isLoggedIn)
+            future: getData(),
+            builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+              if (_isLoggedIn)
                 return PageView(
                   controller: _pageController,
-                  onPageChanged: (indexs){
+                  onPageChanged: (indexs) {
                     setState(() {
                       index = indexs;
                     });
                   },
                   children: <Widget>[
-                    Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
-                    // Container(child: EventScreen(animationController: animationController,),),
-                    Container(child: ListDisplay(animationController: animationController,)),
-                    Container(child: EventsScreen(animationController: animationController,),),
-                    Container(child: UserList(animationController: animationController,)),
+                    Container(
+                      child: MyDashboardScreen(
+                        animationController: animationController,
+                        changeBody: this.changeBody,
+                      ),
+                    ),
+                    Container(
+                      child: ShoesStorePage(),
+                    ),
+                    Container(child: Payment()),
+                    // Container(child: QRTes(),)
                   ],
                 );
               else
                 return PageView(
                   controller: _pageController,
-                  onPageChanged: (indexs){
+                  onPageChanged: (indexs) {
                     setState(() {
                       index = indexs;
                     });
                   },
                   children: <Widget>[
-                    Container(child: EventScreen(animationController: animationController,),),
-                    Container(child: MyDashboardScreen(animationController: animationController,changeBody: this.changeBody,),),
-                    Container(child: EventsScreen(animationController: animationController,),),
-                    Container(color: Colors.blue,),
+                    Container(
+                        child: CourseInfoScreen(
+                      user_type: user_type,
+                      studentNumber: username,
+                    )),
+                    Container(
+                      child: ShoesStorePage(),
+                    ),
+                    Container(
+                      child: GeneratePage(
+                        studentID: username,
+                      ),
+                    ),
                   ],
                 );
-          }
-        ),
-
+            }),
         bottomNavigationBar: bottomNav(),
       ),
     );
@@ -131,51 +165,39 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
     return true;
   }
 
-
-
-  Widget bottomNav()
-  {
-
-
-    return  BottomNavyBar(
-      selectedIndex: index,
-      showElevation: true,
-
-      itemCornerRadius: 8,
-      curve: Curves.easeInBack,
-      onItemSelected: (indexs) => setState(() {
-        index = indexs;
-        _pageController.jumpToPage(index);
-      }),
-      items: [
-        BottomNavyBarItem(
-          icon: Icon(Icons.apps),
-          title: Text('Home'),
-          activeColor: Colors.red,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.people),
-          title: Text('Users'),
-          activeColor: Colors.purpleAccent,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.calendar_today),
-          title: Text("Events"),
-          activeColor: Colors.pink,
-          textAlign: TextAlign.center,
-        ),
-        BottomNavyBarItem(
-          icon: Icon(Icons.settings),
-          title: Text('Settings'),
-          activeColor: Colors.blue,
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
+  Widget bottomNav() {
+    return BottomNavyBar(
+        selectedIndex: index,
+        showElevation: true,
+        itemCornerRadius: 8,
+        curve: Curves.easeInBack,
+        onItemSelected: (indexs) => setState(() {
+              index = indexs;
+              _pageController.jumpToPage(index);
+            }),
+        items:  [
+                BottomNavyBarItem(
+                  icon: Icon(Icons.apps),
+                  title: Text('Home'),
+                  activeColor: Colors.red,
+                  textAlign: TextAlign.center,
+                ),
+                BottomNavyBarItem(
+                  icon: Icon(Icons.calendar_today),
+                  title: Text('Events'),
+                  activeColor: Colors.purpleAccent,
+                  textAlign: TextAlign.center,
+                ),
+                BottomNavyBarItem(
+                  icon: Icon(Icons.hourglass_empty),
+                  title: Text("Payment"),
+                  activeColor: Colors.pink,
+                  textAlign: TextAlign.center,
+                ),
+              ]);
 
   }
+
   Widget bottomBar() {
     return Column(
       children: <Widget>[
@@ -186,15 +208,15 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
           tabIconsList: tabIconsList,
           addClick: () {},
           changeIndex: (int index) {
-
             if (index == 0 || index == 2) {
               animationController.reverse().then<dynamic>((data) {
                 if (!mounted) {
                   return;
                 }
                 setState(() {
-                  tabBody =
-                      MyDashboardScreen(animationController: animationController,changeBody: this.changeBody);
+                  tabBody = MyDashboardScreen(
+                      animationController: animationController,
+                      changeBody: this.changeBody);
                 });
               });
             } else if (index == 1 || index == 3) {
@@ -202,10 +224,6 @@ class _AsapAppHomeScreenState extends State<AsapAppHomeScreen>
                 if (!mounted) {
                   return;
                 }
-                setState(() {
-                  tabBody =
-                      EventScreen(animationController: animationController);
-                });
               });
             }
           },

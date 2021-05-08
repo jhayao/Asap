@@ -2,10 +2,7 @@ import 'package:animated_background/fitness_app/asap_app_home_screen.dart';
 import 'package:animated_background/homePage/app_theme.dart';
 import 'package:animated_background/homePage/custom_drawer/drawer_user_controller.dart';
 import 'package:animated_background/homePage/custom_drawer/home_drawer.dart';
-import 'package:animated_background/homePage/feedback_screen.dart';
-import 'package:animated_background/homePage/help_screen.dart';
-import 'package:animated_background/homePage/home_screen.dart';
-import 'package:animated_background/homePage/invite_friend_screen.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 

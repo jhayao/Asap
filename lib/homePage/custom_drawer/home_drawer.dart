@@ -8,7 +8,12 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeDrawer extends StatefulWidget {
-  const HomeDrawer({Key key, this.screenIndex, this.iconAnimationController, this.callBackIndex}) : super(key: key);
+  const HomeDrawer(
+      {Key key,
+      this.screenIndex,
+      this.iconAnimationController,
+      this.callBackIndex})
+      : super(key: key);
 
   final AnimationController iconAnimationController;
   final DrawerIndex screenIndex;
@@ -22,6 +27,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   List<DrawerList> drawerList;
   var userData;
   var _url;
+
   @override
   void initState() {
     setDrawerListArray();
@@ -30,30 +36,29 @@ class _HomeDrawerState extends State<HomeDrawer> {
     super.initState();
   }
 
-
-  showAlertDialog(BuildContext context){
-    AlertDialog alert=AlertDialog(
-      content: Container(
-        height: 40,
-        child: new Row(
-          children: [
-            SpinKitFadingCircle(
-              color: Colors.blueAccent,
-              size: 40.0,
-            ),
-            Container(margin: EdgeInsets.only(left: 15),child:Text("Signing out" )),
-          ],),
-      )
-    );
-    showDialog(barrierDismissible: false,
-      context:context,
-      builder:(BuildContext context){
+  showAlertDialog(BuildContext context) {
+    AlertDialog alert = AlertDialog(
+        content: Container(
+      height: 40,
+      child: new Row(
+        children: [
+          SpinKitFadingCircle(
+            color: Colors.blueAccent,
+            size: 40.0,
+          ),
+          Container(
+              margin: EdgeInsets.only(left: 15), child: Text("Signing out")),
+        ],
+      ),
+    ));
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (BuildContext context) {
         return alert;
       },
     );
   }
-
-
 
   void setDrawerListArray() {
     drawerList = <DrawerList>[
@@ -62,32 +67,32 @@ class _HomeDrawerState extends State<HomeDrawer> {
         labelName: 'Home',
         icon: Icon(Icons.home),
       ),
-      DrawerList(
-        index: DrawerIndex.Help,
-        labelName: 'Help',
-        isAssetsImage: true,
-        imageName: 'assets/images/supportIcon.png',
-      ),
-      DrawerList(
-        index: DrawerIndex.FeedBack,
-        labelName: 'FeedBack',
-        icon: Icon(Icons.help),
-      ),
-      DrawerList(
-        index: DrawerIndex.Invite,
-        labelName: 'Invite Friend',
-        icon: Icon(Icons.group),
-      ),
-      DrawerList(
-        index: DrawerIndex.Share,
-        labelName: 'Rate the app',
-        icon: Icon(Icons.share),
-      ),
-      DrawerList(
-        index: DrawerIndex.About,
-        labelName: 'About Us',
-        icon: Icon(Icons.info),
-      ),
+      // DrawerList(
+      //   index: DrawerIndex.Help,
+      //   labelName: 'Help',
+      //   isAssetsImage: true,
+      //   imageName: 'assets/images/supportIcon.png',
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.FeedBack,
+      //   labelName: 'FeedBack',
+      //   icon: Icon(Icons.help),
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.Invite,
+      //   labelName: 'Invite Friend',
+      //   icon: Icon(Icons.group),
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.Share,
+      //   labelName: 'Rate the app',
+      //   icon: Icon(Icons.share),
+      // ),
+      // DrawerList(
+      //   index: DrawerIndex.About,
+      //   labelName: 'About Us',
+      //   icon: Icon(Icons.info),
+      // ),
     ];
   }
 
@@ -112,10 +117,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     animation: widget.iconAnimationController,
                     builder: (BuildContext context, Widget child) {
                       return ScaleTransition(
-                        scale: AlwaysStoppedAnimation<double>(1.0 - (widget.iconAnimationController.value) * 0.2),
+                        scale: AlwaysStoppedAnimation<double>(
+                            1.0 - (widget.iconAnimationController.value) * 0.2),
                         child: RotationTransition(
-                          turns: AlwaysStoppedAnimation<double>(Tween<double>(begin: 0.0, end: 24.0)
-                                  .animate(CurvedAnimation(parent: widget.iconAnimationController, curve: Curves.fastOutSlowIn))
+                          turns: AlwaysStoppedAnimation<double>(Tween<double>(
+                                      begin: 0.0, end: 24.0)
+                                  .animate(CurvedAnimation(
+                                      parent: widget.iconAnimationController,
+                                      curve: Curves.fastOutSlowIn))
                                   .value /
                               360),
                           child: Container(
@@ -124,19 +133,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               boxShadow: <BoxShadow>[
-                                BoxShadow(color: AppTheme.grey.withOpacity(0.6), offset: const Offset(2.0, 4.0), blurRadius: 8),
+                                BoxShadow(
+                                    color: AppTheme.grey.withOpacity(0.6),
+                                    offset: const Offset(2.0, 4.0),
+                                    blurRadius: 8),
                               ],
                             ),
                             child: ClipRRect(
-
-                              borderRadius: const BorderRadius.all(Radius.circular(60.0)),
-                              // child: Image.asset('assets/images/userImage.png'),
+                                borderRadius: const BorderRadius.all(
+                                    Radius.circular(60.0)),
+                                // child: Image.asset('assets/images/userImage.png'),
                                 child: Image.network(
-                                  (_url != null ? _url : 'http://ssc.codes/storage/users/default.png'),
+                                  (_url != null
+                                      ? _url
+                                      : 'https://ssc.codes/storage/users/default.png'),
                                   fit: BoxFit.fill,
-
-                                )
-                            ),
+                                )),
                           ),
                         ),
                       );
@@ -145,7 +157,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8, left: 4),
                     child: Text(
-                     userData!=null ? '${userData['name']}' : '',
+                      userData != null ? '${userData['name']}' : '',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         color: AppTheme.grey,
@@ -181,31 +193,37 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Column(
             children: <Widget>[
               ListTile(
-                title: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: AppTheme.darkText,
+                  title: Text(
+                    'Sign Out',
+                    style: TextStyle(
+                      fontFamily: AppTheme.fontName,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppTheme.darkText,
+                    ),
+                    textAlign: TextAlign.left,
                   ),
-                  textAlign: TextAlign.left,
-                ),
-                trailing: Icon(
-                  Icons.power_settings_new,
-                  color: Colors.red,
-                ),
-                onTap: () async {
-                  print("data");
-                  SharedPreferences localStorage = await SharedPreferences.getInstance();
-                  localStorage.clear();
-                  showAlertDialog(context);
-                  Future.delayed(const Duration(seconds: 3),(){
-                    Navigator.pushReplacement(context, PageRouteBuilder(pageBuilder: (context, anim1, anim2) => OnboardingPage()),
+                  trailing: Icon(
+                    Icons.power_settings_new,
+                    color: Colors.red,
+                  ),
+                  onTap: () async {
+                    print("data");
+                    SharedPreferences localStorage =
+                        await SharedPreferences.getInstance();
+                    localStorage.clear();
+                    showAlertDialog(context);
+                    Future.delayed(const Duration(seconds: 3), () {
+                      Navigator.pushReplacement(
+                        context,
+                        PageRouteBuilder(
+                            pageBuilder: (context, anim1, anim2) =>
+                                OnboardingPage()),
+                      );
+                    }
                     );
-                  });
-                      }
-              ),
+                  }
+                  ),
               SizedBox(
                 height: MediaQuery.of(context).padding.bottom,
               )
@@ -253,9 +271,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       ? Container(
                           width: 24,
                           height: 24,
-                          child: Image.asset(listData.imageName, color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack),
+                          child: Image.asset(listData.imageName,
+                              color: widget.screenIndex == listData.index
+                                  ? Colors.blue
+                                  : AppTheme.nearlyBlack),
                         )
-                      : Icon(listData.icon.icon, color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack),
+                      : Icon(listData.icon.icon,
+                          color: widget.screenIndex == listData.index
+                              ? Colors.blue
+                              : AppTheme.nearlyBlack),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -264,7 +288,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: widget.screenIndex == listData.index ? Colors.blue : AppTheme.nearlyBlack,
+                      color: widget.screenIndex == listData.index
+                          ? Colors.blue
+                          : AppTheme.nearlyBlack,
                     ),
                     textAlign: TextAlign.left,
                   ),
@@ -277,11 +303,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
                     builder: (BuildContext context, Widget child) {
                       return Transform(
                         transform: Matrix4.translationValues(
-                            (MediaQuery.of(context).size.width * 0.75 - 64) * (1.0 - widget.iconAnimationController.value - 1.0), 0.0, 0.0),
+                            (MediaQuery.of(context).size.width * 0.75 - 64) *
+                                (1.0 -
+                                    widget.iconAnimationController.value -
+                                    1.0),
+                            0.0,
+                            0.0),
                         child: Padding(
                           padding: EdgeInsets.only(top: 8, bottom: 8),
                           child: Container(
-                            width: MediaQuery.of(context).size.width * 0.75 - 64,
+                            width:
+                                MediaQuery.of(context).size.width * 0.75 - 64,
                             height: 46,
                             decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.2),
@@ -308,14 +340,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
     widget.callBackIndex(indexScreen);
   }
 
-  void _getUserInfo() async{
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      var userJson = localStorage.getString('user');
-      var user = json.decode(userJson);
-      setState(() {
-          userData = user;
-          _url ='http://ssc.codes/storage/' +  ( userData!=null ? '${userData['avatar']}': '');
-      });
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    setState(() {
+      userData = user;
+      _url = 'https://ssc.codes/storage/' +
+          (userData != null ? '${userData['avatar']}' : '');
+    });
   }
 }
 

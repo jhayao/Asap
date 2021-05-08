@@ -114,7 +114,7 @@ class LoginPageState extends State<LoginPage> with TickerProviderStateMixin {
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
-        resizeToAvoidBottomPadding: false,
+        resizeToAvoidBottomInset : false,
         body: Stack(
           children: <Widget>[
             Image.asset(
